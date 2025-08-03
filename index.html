@@ -531,17 +531,19 @@
                 font-size: 2.5em;
             }
         }
-        .static-logo {
+{
+  width: 100%;
   text-align: center;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  background-color: transparent; /* أو ضع لون خلفية لو تحب */
+  margin-top: 55px; /* علشان تحت الملاحظة مباشرة */
+  z-index: 999;
 }
 
-.static-logo img {
-  width: 180px;
+#game-logo-bar img {
+  width: 160px;
   max-width: 90%;
   opacity: 0.95;
-}    
+}   
     </style>
 
 </head>
@@ -551,9 +553,10 @@
         <strong>ملاحظة:</strong> هذه النسخه لشخص واحد فقط وغير قابله للنشر او البيع ومن يخالف ذلك سيتم اتخاذ الإجراءات القانونيه في هذا الأمر وللتذكير بذمتك وأمانتك:
         "قال ﷺ "لا إيمان لمن لا أمانة له، ولا دين لمن لا عهد له"
     </div>
-<div class="static-logo">
+<div id="game-logo-bar">
   <img src="https://raw.githubusercontent.com/manakon/manakon1/main/manakon-removebg-preview.png" alt="شعار اللعبة">
 </div>
+    <div class="top-note">...</div>
     <div id="tips-popup" class="popup-overlay">
         <div class="popup-content">
             <h2>نصيحة علشان نلعب ونستانس… بس بدون ما ننسى الأهم 🌙</h2>
@@ -1225,6 +1228,7 @@
     </script>
 </body>
 </html>
+
 
 
 
