@@ -288,11 +288,13 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
+            justify-items: center; /* توسيط العناصر داخل الشبكة */
         }
         .score-board.grid-2-columns { /* تنسيق 3 صفوف و 2 عمود لـ 6 فرق */
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
+            justify-items: center; /* توسيط العناصر داخل الشبكة */
         }
 
         .team-score-card {
@@ -602,7 +604,7 @@
             }
             /* تعديل لحجم شاشة الترحيب على التابلت */
             #welcome-popup .popup-content {
-                max-width: 470px; /* تصغير عرض نافذة الترحيب على التابلت */
+                max-width: 400px; /* تصغير عرض نافذة الترحيب على التابلت */
                 padding: 25px; /* تعديل البادينج */
             }
             #welcome-popup .popup-content img {
@@ -642,11 +644,11 @@
             }
             /* تعديل لحجم شاشة الترحيب على الشاشات الكبيرة */
             #welcome-popup .popup-content {
-                max-width: 450px; /* تصغير عرض نافذة الترحيب على الشاشات الكبيرة */
+                max-width: 350px; /* تصغير عرض نافذة الترحيب على الشاشات الكبيرة */
                 padding: 30px; /* تعديل البادينج */
             }
             #welcome-popup .popup-content img {
-                max-width: 70%; /* تصغير الصورة قليلاً على الشاشات الكبيرة */
+                max-width: 50%; /* تصغير الصورة بشكل أكبر على الشاشات الكبيرة */
             }
 
             .team-selection-grid .btn,
@@ -830,33 +832,147 @@
         let currentRound = 0;
         let currentQuestionIndex = 0;
         let teams = []; // { name: 'الفريق 1', score: 0 }
-        let questions = [
-            // قسم شخصيات مهمة
-            { category: "شخصيات مهمة", question: "أنا قائد عظيم وموحد الجزيرة العربية، ومؤسس المملكة العربية السعودية. من أكون؟", answer: "الملك عبدالعزيز آل سعود" },
-            { category: "شخصيات مهمة", question: "أنا عالم مسلم وفيلسوف وطبيب، اشتهرت بكتاب القانون في الطب. من أكون؟", answer: "ابن سينا" },
-            { category: "شخصيات مهمة", question: "أنا صحابي جليل وقائد عسكري، لقبت بسيف الله المسلول. من أكون؟", answer: "خالد بن الوليد" },
-            { category: "شخصيات مهمة", question: "أنا مخترع المصباح الكهربائي وتجاوزت الفشل آلاف المرات. من أكون؟", answer: "توماس إديسون" },
-            // قسم طبخات
-            { category: "طبخات", question: "أنا طبق شعبي سعودي، أساسي في المناسبات، مكوني الرئيسي الأرز واللحم أو الدجاج. من أكون؟", answer: "الكبسة" },
-            { category: "طبخات", question: "أنا حلوى شرقية شهيرة، تتكون من طبقات رقيقة من العجين والمكسرات ومغطاة بالشربات. من أكون؟", answer: "البقلاوة" },
-            { category: "طبخات", question: "أنا طبق مكسيكي شهير، يُقدم في خبز التورتيلا مع اللحم والخضروات والصلصات. من أكون؟", answer: "التاكو" },
-            { category: "طبخات", question: "أنا شوربة فرنسية غنية، تُقدم عادةً في وعاء خبز مجوف. من أكون؟", answer: "شوربة البصل الفرنسية" },
-            // قسم حيوانات
-            { category: "حيوانات", question: "أنا ملك الغابة، صوتي زئير، وشعري كثيف. من أكون؟", answer: "الأسد" },
-            { category: "حيوانات", question: "أنا أطول حيوان على وجه الأرض، ورقبتي طويلة جداً. من أكون؟", answer: "الزرافة" },
-            { category: "حيوانات", question: "أنا حيوان بحري ضخم، أعيش في المحيطات وأنا أذكى الثدييات البحرية. من أكون؟", answer: "الدلفين" },
-            { category: "حيوانات", question: "أنا طائر لا أستطيع الطيران، ولكنني أعدو بسرعة كبيرة وأعيش في المناطق الباردة. من أكون؟", answer: "البطريق" },
-            // قسم بلدان
-            { category: "بلدان", question: "أنا بلد الحرمين الشريفين، وأمتلك أكبر احتياطي نفط في العالم. من أكون؟", answer: "المملكة العربية السعودية" },
-            { category: "بلدان", question: "أنا بلد الأهرامات العظيمة ونهر النيل الخالد. من أكون؟", answer: "مصر" },
-            { category: "بلدان", question: "أنا بلد برج إيفل الشهير ومدينة النور. من أكون؟", answer: "فرنسا" },
-            { category: "بلدان", question: "أنا بلد السور العظيم والتنين. من أكون؟", answer: "الصين" }
-        ];
-
+        
         let availableQuestions = []; // الأسئلة المتاحة للجولة الحالية
+        
+        // Group questions by category for easier access
+        const groupedQuestions = {
+            "شخصيات مهمة": [
+                { category: "شخصيات مهمة", question: "أنا قائد عظيم وموحد الجزيرة العربية، ومؤسس المملكة العربية السعودية. من أكون؟", answer: "الملك عبدالعزيز آل سعود" },
+                { category: "شخصيات مهمة", question: "أنا عالم مسلم وفيلسوف وطبيب، اشتهرت بكتاب القانون في الطب. من أكون؟", answer: "ابن سينا" },
+                { category: "شخصيات مهمة", question: "أنا صحابي جليل وقائد عسكري، لقبت بسيف الله المسلول. من أكون؟", answer: "خالد بن الوليد" },
+                { category: "شخصيات مهمة", question: "أنا مخترع المصباح الكهربائي وتجاوزت الفشل آلاف المرات. من أكون؟", answer: "توماس إديسون" },
+                { category: "شخصيات مهمة", question: "أنا رسام إيطالي شهير، معروف بلوحتي الموناليزا والعشاء الأخير. من أكون؟", answer: "ليوناردو دافنشي" },
+                { category: "شخصيات مهمة", question: "نبي كريم، وُلِد من غير أب، وكانت ولادته آية من الله، وتكلم في المهد، وأحيا الموتى بإذن الله، وكان بارًا بأمه، ورفعه الله إليه. من أكون؟", answer: "عيسى بن مريم - عليه السلام" },
+                { category: "شخصيات مهمة", question: "نبي وأب لاثني عشر ولدًا، رأى في المنام أن أحد أبنائه سيكون له شأن عظيم، فغار إخوته منه وألقوه في البئر، وبعد سنوات عاد إليه وقد جعله الله عزيزًا لمصر. من أكون؟", answer: "يعقوب - عليه السلام" },
+                { category: "شخصيات مهمة", question: "شاب شجاع، واجه جنديًا جبارًا اسمه جالوت وقتله، ثم أصبح نبيًا وملكًا، وأنزل الله عليه الزبور، وكان صوته جميلًا تتفاعل معه الجبال والطير. من أكون؟", answer: "داوود - عليه السلام" },
+                { category: "شخصيات مهمة", question: "تاجر غني من أوائل من دخلوا الإسلام، اشترى بلال بن رباح ليحرّره لله، وأنفق ماله كله في خدمة الدين، وكان رفيق النبي في الهجرة. من أكون؟", answer: "أبو بكر الصديق - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "شاب قويّ، استُشهد في معركة اليمامة، ولم يُعرف جسده بين الشهداء إلا بعلامة في يده، وجمع القرآن في قلبه قبل أن يُجمع رسميًا في مصحف. من أكون؟", answer: "زيد بن الخطاب - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "نبي حليم أُرسل إلى قوم مدين الذين كانوا يطفّفون في الميزان، دعاهم للعدل فرفضوا، فأخذتهم الصيحة وهم جاثمين. من أكون؟", answer: "شعيب - عليه السلام" },
+                { category: "شخصيات مهمة", question: "أحد العشرة المبشرين بالجنة، كان سهمه لا يُخطئ، ودعا له النبي بأن تُستجاب دعوته، وإذا أقسم على الله لأبرّه. من أكون؟", answer: "سعد بن أبي وقاص - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "نبي صابر ابتُلي بفقدان ماله وأولاده وصحته، لكنه لم ييأس، فدعا ربه: 'رب إني مسّني الضر وأنت أرحم الراحمين'، فشفاه الله وردّ عليه نعمته. من أكون؟", answer: "أيوب - عليه السلام" },
+                { category: "شخصيات مهمة", question: "صبي خدم النبي في بيته، فدعا له بالبركة في المال والعمر والولد، فعاش طويلًا، وكثُر ماله وذريته، وكان محبوبًا من النبي. من أكون؟", answer: "أنس بن مالك - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "رجل قوي وعادل، أسلم بعد تحدٍّ شديد، وكان الإسلام عزًّا بعد إسلامه، لقّبه النبي بالفاروق، وكان يُفرّق بين الحق والباطل. من أكون؟", answer: "عمر بن الخطاب - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "نبي دعا ربه أن يُنزل مائدة من السماء لقومه، لتكون لهم عيدًا وآية، واستجاب الله دعاءه. من أكون؟", answer: "عيسى - عليه السلام" },
+                { category: "شخصيات مهمة", question: "نبي أرسله الله إلى قوم عاد، وكان قوي البنية، فدعاهم إلى عبادة الله، فكذّبوه، فأهلكهم الله بريح شديدة عاتية. من أكون؟", answer: "هود - عليه السلام" },
+                { category: "شخصيات مهمة", question: "طفل رُمي في بئر بسبب حقد إخوته، نشأ في قصر عزيز مصر، وفسّر الأحلام، ثم صار وزيرًا يُدير خزائن البلاد. من أكون؟", answer: "يوسف - عليه السلام" },
+                { category: "شخصيات مهمة", question: "شاب معروف بحكمته، آتاه الله الحكمة وهو صغير، وسُخّرت له الطير والجن، وكان ملكًا ونبيًا، يُفهم لغة الحيوانات. من أكون؟", answer: "سليمان - عليه السلام" },
+                { category: "شخصيات مهمة", question: "نبي بنى سفينة بأمر الله، وسخر منه قومه، ثم حمل فيها من كل زوجين اثنين، ونجا من الطوفان العظيم. من أكون؟", answer: "نوح - عليه السلام" },
+                { category: "شخصيات مهمة", question: "صحابي قوي البنية، كان شديد الغيرة على الدين، دعا له النبي، ولقّبه 'سيف الله المسلول'، وقاد المعارك ببطولة. من أكون؟", answer: "خالد بن الوليد - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "نبي كُلّف بدعوة فرعون، وكان فصيح اللسان شجاع القلب، شقّ الله له البحر، وأُنزل عليه التوراة. من أكون؟", answer: "موسى - عليه السلام" },
+                { category: "شخصيات مهمة", question: "صحابي شاب، كان حافظًا قويًا، كُلّف بجمع القرآن بعد وفاة عدد من الحفظة، وأشرف على كتابة المصحف. من أكون؟", answer: "زيد بن ثابت - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "صحابي، كان من صغار الصحابة، ونام في فراش النبي ليلة الهجرة فداءً له، وكان من أكثر الناس علمًا وشجاعة. من أكون؟", answer: "علي بن أبي طالب - رضي الله عنه" },
+                { category: "شخصيات مهمة", question: "نبي واجه قومه بقوة وثبات، ألقوه في النار، فكانت بردًا وسلامًا، وابتلي بأمر ذبح ابنه، ففداه الله. من أكون؟", answer: "إبراهيم - عليه السلام" },
+                { category: "شخصيات مهمة", question: "طلب منه قومه أن ينزل عليهم مائدة من السماء، فقال: 'اللَّهُمَّ رَبَّنَا أَنزِلْ عَلَيْنَا مَائِدَةً مِّنَ السَّمَاءِ تَكُونُ لَنَا عِيدًا لِّأَوَّلِنَا وَآخِرِنَا وَآيَةً مِّنكَ ۖ وَارْزُقْنَا وَأَنتَ خَيْرُ الرَّازِقِينَ”؟ من أكون؟", answer: "النّبي عيسى -عليه السلام" },
+                { category: "شخصيات مهمة", question: "عالم جليل، وُلِد في الرياض وفَقَدَ بصره صغيرًا، لكنه أصبح من كبار العلماء والمفتين، تولّى رئاسة هيئة كبار العلماء ودار الإفتاء، وكان يُجيب على الأسئلة من جميع أنحاء العالم بصوته الهادئ، وله فضل كبير في نشر العقيدة الصحيحة. من أكون؟", answer: "الشيخ عبدالعزيز بن باز - رحمه الله" },
+                { category: "شخصيات مهمة", question: "عالم فقيه، وُلِد في عنيزة بالقصيم، عُرف بشرحه الواضح وتدرّجه في الطلب منذ صغره، له سلسلة دروس مشهورة في التفسير والحديث والعقيدة، وكان يُدرّس حتى أيامه الأخيرة، وله صوت محبب وشرح سهل ممتنع. من أكون؟", answer: "الشيخ محمد بن صالح العثيمين - رحمه الله" },
+                { category: "شخصيات مهمة", question: "عالم معاصر، عضو في هيئة كبار العلماء، وله مشاركات مؤثرة في وسائل الإعلام، يتميز بدقة الفتاوى وقوة البيان، وحرصه على التوجيه الشرعي للشباب والمجتمع، وله دروس منتظمة في التفسير والفقه والعقيدة. من أكون؟", answer: "الشيخ صالح بن فوزان الفوزان - حفظه الله" },
+                { category: "شخصيات مهمة", question: "إمام وخطيب للحرم المكي، صوته خاشع ومؤثر، تخرج من كلية الشريعة بجامعة الإمام، وشارك في الإمامة في المسجد الحرام منذ سنوات، وله كلمات مؤثرة قبل الخطب ومناسبات الحج. من أكون؟", answer: "الشيخ ماهر المعيقلي" },
+                { category: "شخصيات مهمة", question: "إمام للحرم المكي، عُرف بجمال التلاوة وقوة الحفظ، يحمل شهادة الدكتوراه في الفقه، وله أسلوب محكم في الخطبة، وتسجيلاته القرآنية تُبث على أوسع نطاق. من أكون؟", answer: "الشيخ عبدالرحمن السديس" }
+            ],
+            // قسم طبخات
+            "طبخات": [
+                { category: "طبخات", question: "أنا طبق شعبي سعودي، أساسي في المناسبات، مكوني الرئيسي الأرز واللحم أو الدجاج. من أكون؟", answer: "الكبسة" },
+                { category: "طبخات", question: "أنا حلوى شرقية شهيرة، تتكون من طبقات رقيقة من العجين والمكسرات ومغطاة بالشربات. من أكون؟", answer: "البقلاوة" },
+                { category: "طبخات", question: "أنا طبق مكسيكي شهير، يُقدم في خبز التورتيلا مع اللحم والخضروات والصلصات. من أكون؟", answer: "التاكو" },
+                { category: "طبخات", question: "أنا شوربة فرنسية غنية، تُقدم عادةً في وعاء خبز مجوف. من أكون؟", answer: "شوربة البصل الفرنسية" },
+                { category: "طبخات", question: "أنا عجينة إيطالية طويلة ورفيعة، تُقدم مع أنواع مختلفة من الصلصات. من أكون؟", answer: "الباستا (المعكرونة)" },
+                { category: "طبخات", question: "طبق مكون من مجموعة من الخضروات والورقيات يقدم مع الصوص الابيض او زيت الزيتون ؟", answer: "سلطة خضار" },
+                { category: "طبخات", question: "معكرونة مغطاة بصلصة كريمية بيضاء مع الجبن، تُخبز في الفرن حتى تتحمر. من أكون؟", answer: "مكرونة بالبشاميل" },
+                { category: "طبخات", question: "مجموعة من اللحوم (دجاج، لحم، كباب) تُشوى على الفحم وتُقدم مع السلطات والخبز. من أكون؟", answer: "مشاوي" },
+                { category: "طبخات", question: "كرات مقلية من الحمص المهروس والبهارات، تُقدم كمقبلات مع الطحينة. من أكون؟", answer: "فلافل" },
+                { category: "طبخات", question: "شرائح لحم أو دجاج متبلة ومشوية، تُقدم عادة في خبز مع الخضار والصلصات. من أكون؟", answer: "شاورما" },
+                { category: "طبخات", question: "قطع رقيقه من العجين تطبخ مع اللحم والمرق والخضار. من أكون؟", answer: "مرقوق" },
+                { category: "طبخات", question: "نوع من العجين العربي التقليدي يُخبز في التنور أو على الصاج، رفيع ومقرمش. من أكون؟", answer: "خبز تنور" },
+                { category: "طبخات", question: "كرات لحم مفروم مكونة من اللحم والبرغل والتوابل، مقلية أو مقلية بالفرن. من أكون؟", answer: "كبة" },
+                { category: "طبخات", question: "خضار محشوة بالأرز واللحم المفروم، تُطهى في صلصة الطماطم. من أكون؟", answer: "محاشي" },
+                { category: "طبخات", question: "أوراق خضراء محشوة بالأرز والتوابل، تقدم باردة أو دافئة. من أكون؟", answer: "ورق عنب" },
+                { category: "طبخات", question: "خبز دائري رقيق مع طبقة من اللحم والصلصة والتوابل. من أكون؟", answer: "صفيحة لحم" },
+                { category: "طبخات", question: "دجاج مقلي بطلاء مقرمش، يُقدم كوجبة سريعة. من أكون؟", answer: "بروستد" },
+                { category: "طبخات", question: "شطيرة لحم مفروم أو دجاج مع الخضار والصلصات داخل خبز دائري. من أكون؟", answer: "برجر" },
+                { category: "طبخات", question: "طبق ياباني من شرائح السمك النيء أو المطبوخ مع الأرز المخلل وأوراق الأعشاب. من أكون؟", answer: "سوشي" },
+                { category: "طبخات", question: "طبق يُطهى في الفخار، عادة يحتوي على اللحم أو الدجاج مع الخضار والتوابل. من أكون؟", answer: "طاجن" },
+                { category: "طبخات", question: "طبق من الأرز مع العدس والمكرونة والبصل المقلي، يُقدم مع صلصة الطماطم. من أكون؟", answer: "كوشري" },
+                { category: "طبخات", question: "خبز رقيق محشو باللحم المفروم والبهارات، يُخبز أو يُقلى ويطبخ مع اللبن. من أكون؟", answer: "شاكريه" },
+                { category: "طبخات", question: "خبز رقيق محشو باللحم والبصل والبهارات، يُخبز ويُقدم ساخناً. من أكون؟", answer: "صفيحة لحم" },
+                { category: "طبخات", question: "لفائف أرز مع خضار وسمك أو لحم مطهي، تُلف بورق النوري البحري. من أكون؟", answer: "كيمباب" },
+                { category: "طبخات", question: "طبق شعبي من المعكرونة المقلية مع الخضار والصلصة، سريع التحضير. من أكون؟", answer: "نودلز" },
+                { category: "طبخات", question: "مخلل مصنوع من الملفوف المخلل مع الفلفل الحار والثوم. من أكون؟", answer: "كيمتشي" },
+                { category: "طبخات", question: "حلوى صغيرة هشة مصنوعة من الدقيق والسكر والزبدة، تُقدم مع الشاي. من أكون؟", answer: "غريبة" },
+                { category: "طبخات", question: "حلوى سميد مبللة بالقطر ومحلاة، تُقدم في المناسبات. من أكون؟", answer: "بسبوسة" },
+                { category: "طبخات", question: "حلوى من الجبن أو القشطة مع الشعيرية المقرمشة، تُغطى بالقطر. من أكون؟", answer: "كنافة" },
+                { category: "طبخات", question: "مزيج من باذنجان مهروس مع الطحينة والليمون والثوم، يُقدم كمقبلات. من أكون؟", answer: "متبل" },
+                { category: "طبخات", question: "سلطة طازجة من البرغل والبندورة والخيار والبقدونس، مع زيت الزيتون والليمون. من أكون؟", answer: "تبولة" }
+            ],
+            // قسم حيوانات
+            "حيوانات": [
+                { category: "حيوانات", question: "أنا ملك الغابة، صوتي زئير، وشعري كثيف. من أكون؟", answer: "الأسد" },
+                { category: "حيوانات", question: "أنا أطول حيوان على وجه الأرض، ورقبتي طويلة جداً. من أكون؟", answer: "الزرافة" },
+                { category: "حيوانات", question: "أنا حيوان بحري ضخم، أعيش في المحيطات وأنا أذكى الثدييات البحرية. من أكون؟", answer: "الدلفين" },
+                { category: "حيوانات", question: "أنا طائر لا أستطيع الطيران، ولكنني أعدو بسرعة كبيرة وأعيش في المناطق الباردة. من أكون؟", answer: "البطريق" },
+                { category: "حيوانات", question: "أنا حشرة اجتماعية صغيرة، معروفة ببناء خلايا سداسية وتصنيع العسل. من أكون؟", answer: "النحلة" },
+                { category: "حيوانات", question: "أعيش في الماء، وأتنفس من فتحة على رأسي، وأرش الماء عاليًا… من أكون؟", answer: "الحوت" },
+                { category: "حيوانات", question: "أستطيع الطيران، وأردد الكلام أحيانًا مثل البشر… من أكون؟", answer: "الببغاء" },
+                { category: "حيوانات", question: "أزحف على بطني، ولا أملك أرجلًا، وقد أكون سامة… من أكون؟", answer: "الأفعى" },
+                { category: "حيوانات", question: "أعيش في المزرعة، وأبيض اللون، وأبيض بيضًا يؤكل… من أكون؟", answer: "الدجاجة" },
+                { category: "حيوانات", question: "أحب الجزر، وأذناي طويلتان، وأقفز بخفة… من أكون؟", answer: "الأرنب" },
+                { category: "حيوانات", question: "أعيش في الجبال والثلوج، فرائي كثيف جدًا، وأنا دب… من أكون؟", answer: "الدب القطبي" },
+                { category: "حيوانات", question: "أعيش في البحر، ولدي ثمانية أذرع… من أكون؟", answer: "الأخطبوط" },
+                { category: "حيوانات", question: "أنا حشرة صغيرة، أعمل بجد، وأعيش في خلايا… من أكون؟", answer: "النحلة" },
+                { category: "حيوانات", question: "أنبح ولا أموء، وأنا أوفى صديق للإنسان… من أكون؟", answer: "الكلب" },
+                { category: "حيوانات", question: "أموء كثيرًا، وأحب الحليب، وألعب بكرة الصوف… من أكون؟", answer: "القطة" },
+                { category: "حيوانات", question: "أنا بطيء جدًا، وبيتي على ظهري… من أكون؟", answer: "السلحفاة" },
+                { category: "حيوانات", question: "أعيش في البرية، وأركض بسرعة، ولدي قرون طويلة… من أكون؟", answer: "الغزال" },
+                { category: "حيوانات", question: "أحب الوحل، وأقول \"خن خن\"، وأعيش في المزرعة… من أكون؟", answer: "الخنزير" },
+                { category: "حيوانات", question: "أعيش في الصحراء، وأتحمل العطش لعدة أيام… من أكون؟", answer: "الجمل" },
+                { category: "حيوانات", question: "أنبح بصوت \"عاااو\"، وأعيش مع القطيع… من أكون؟", answer: "الذئب" },
+                { category: "حيوانات", question: "أعيش على الشجر، وآكل الموز، وأقفز من غصن لآخر… من أكون؟", answer: "القرد" },
+                { category: "حيوانات", question: "لي خطوط سوداء وبيضاء، وأشبه الحصان… من أكون؟", answer: "الحمار الوحشي (الزيبرا)" },
+                { category: "حيوانات", question: "أعيش في البحار، وعندي قوقعة على ظهري… من أكون؟", answer: "السلطعون (أو السلحفاة البحرية)" },
+                { category: "حيوانات", question: "أعيش في الغابة، وأقلّد أصواتًا كثيرة، وأنا ماكر… من أكون؟", answer: "الثعلب" },
+                { category: "حيوانات", question: "أعيش في البرك، وأقفز وأقول \"رب رب\"، وأضع بيضي في الماء… من أكون؟", answer: "الضفدع" },
+                { category: "حيوانات", question: "لدي خرطوم طويل، وأعيش في السافانا، وأنا ضخم جدًا… من أكون؟", answer: "الفيل" },
+                { category: "حيوانات", question: "أطير ليلًا، وأحب الظلام، وأصدر صوتًا عاليًا… من أكون؟", answer: "الخفاش" },
+                { category: "حيوانات", question: "أعيش في البحار، وأنا سريع جدًا، وأملك زعنفة حادة… من أكون؟", answer: "القرش" },
+                { category: "حيوانات", question: "صغير الحجم، وأقفز كثيرًا، وأعيش بين العشب… من أكون؟", answer: "الجرادة" },
+                { category: "حيوانات", question: "أعيش في الجبال، وأصدر صوت \"ثغاء\"، ويؤخذ منّي الصوف… من أكون؟", answer: "الخروف" }
+            ],
+            // قسم بلدان
+            "بلدان": [
+                { category: "بلدان", question: "أنا بلد الحرمين الشريفين، وأمتلك أكبر احتياطي نفط في العالم. من أكون؟", answer: "المملكة العربية السعودية" },
+                { category: "بلدان", question: "أنا بلد الأهرامات العظيمة ونهر النيل الخالد. من أكون؟", answer: "مصر" },
+                { category: "بلدان", question: "أنا بلد برج إيفل الشهير ومدينة النور. من أكون؟", answer: "فرنسا" },
+                { category: "بلدان", question: "أنا بلد السور العظيم والتنين. من أكون؟", answer: "الصين" },
+                { category: "بلدان", question: "أنا بلد السوشي والساموراي، ومعروفة بالتقدم التكنولوجي والحدائق الجميلة. من أكون؟", answer: "اليابان" },
+                { category: "بلدان", question: "أرض النيلين، عُرفت بتاريخها العريق وحضارتها الكوشية، وأرضها خصبة تمتد على النيل، وتجمع بين العرب والأفارقة. من أكون؟", answer: "السودان" },
+                { category: "بلدان", question: "بلاد الأرز، فيها جبال وبحر وسهول، وهي من أجمل بلدان الشام، وتشتهر بمطبخها ومثقفيها. من أكون؟", answer: "لبنان" },
+                { category: "بلدان", question: "بلاد الزيتون، فيها قرى معلّقة على الجبال، وأرضها باركها الله، وهي مهد أنبياء كثر، وفيها المسجد الأقصى. من أكون؟", answer: "فلسطين" },
+                { category: "بلدان", question: "فيها جبال الشام وبحرها، تعرّضت لحروب كثيرة لكنها صامدة، وتجمع بين حضارات قديمة وحديثة. من أكون؟", answer: "سوريا" },
+                { category: "بلدان", question: "أرض قرطاج، وتاريخها غني بالثقافة والأصالة، ولها ساحل طويل على المتوسط، ومزيج حضاري فريد. من أكون؟", answer: "تونس" },
+                { category: "بلدان", question: "بلد الأندلسيين الأصل، فيها جبال الريف وسهول الأطلسي، وتشتهر بالصناعة التقليدية والمطبخ المتنوّع. من أكون؟", answer: "المغرب" },
+                { category: "بلدان", question: "أرض الشاوية والمزاب، فيها الصحراء الكبرى، وتعد من أكبر دول إفريقيا مساحة. من أكون؟", answer: "الجزائر" },
+                { category: "بلدان", question: "بلد صغير المساحة لكنه غنيّ بالثقافة، اشتهر بالتنوع والتسامح، وعاصمته المنامة. من أكون؟", answer: "البحرين" },
+                { category: "بلدان", question: "بلد على ضفاف الخليج، فيها ناطحات سحاب ومعالم حديثة، وتُعرف بتقدمها الاقتصادي والسياحي. من أكون؟", answer: "الإمارات العربية المتحدة" },
+                { category: "بلدان", question: "أرض الجبال الخضراء، وعاصمتها مسقط، تُعرف بالهدوء والعراقة والتقاليد العمانية. من أكون؟", answer: "عُمان" },
+                { category: "بلدان", question: "بلد بين الصحراء والبحر، عُرفت بتصدير اللؤلؤ قديمًا، وحاضن للثقافة والتراث. من أكون؟", answer: "قطر" },
+                { category: "بلدان", question: "بلد دجلة والفرات، مهد الحضارات البابلية، وتضم النجف وكربلاء وبغداد العريقة. من أكون؟", answer: "العراق" },
+                { category: "بلدان", question: "أرض سبأ ومعين، فيها صنعاء وعدن، وذكرت في القرآن، وهي مهد حضارات قديمة. من أكون؟", answer: "اليمن" },
+                { category: "بلدان", question: "بلد في شمال أفريقيا، عاصمتها نواكشوط، وأهلها يجمعون بين العربية والأمازيغية والإفريقية. من أكون؟", answer: "موريتانيا" },
+                { category: "بلدان", question: "من بلاد الشام، فيها نهر الأردن، وتضم آثارًا إسلامية عظيمة، مثل مقام النبي شعيب ومؤتة. من أكون؟", answer: "الأردن" },
+                { category: "بلدان", question: "بلد عربي في القرن الإفريقي، يطل على باب المندب، ويتميز بتنوع جغرافي وساحل طويل. من أكون؟", answer: "جيبوتي" },
+                { category: "بلدان", question: "عاصمتها مقديشو، تقع على القرن الإفريقي، وعُرفت بتجارتها البحرية منذ القدم. من أكون؟", answer: "الصومال" },
+                { category: "بلدان", question: "بلد الجبل الأسود والأبيض، في أقصى شمال أفريقيا، يتحدث أهله العربية والأمازيغية. من أكون؟", answer: "ليبيا" },
+                { category: "بلدان", question: "بلد عربي في الخليج، عاصمته الكويت، وله دور إعلامي وسياسي بارز، ويهتم بالعمل الإنساني. من أكون؟", answer: "الكويت" },
+                { category: "بلدان", question: "بلد عربي هادئ، اشتهر بجمال طبيعته وجزره الخلابة، ويتميّز بتنوع بيئي رائع. من أكون؟", answer: "جزر القمر" },
+                { category: "بلدان", question: "بلد عربي أفريقي صغير، عاصمته أسمرة، ويقع على ساحل البحر الأحمر. من أكون؟", answer: "إريتريا" },
+                { category: "بلدان", question: "بلد يتمتع بموقع استراتيجي هام بين أوروبا وإفريقيا، ويتحدث معظم سكانه العربية والتمازغت. من أكون؟", answer: "الصحراء الغربية" },
+                { category: "بلدان", question: "بلد عربي يقع في شرق أفريقيا، ويشترك في الثقافتين العربية والسواحلية، عاصمته زنجبار. من أكون؟", answer: "تنزانيا (زنجبار – الجزء المسلم والعربي)" },
+                { category: "بلدان", question: "بلد مسلم ينتمي للاتحاد المغاربي، معروف بتقاليده الأصيلة وله طابع صحراوي مميز. من أكون؟", answer: "النيجر (الجزء العربي الإسلامي في الشمال)" }
+            ]
+        };
 
         // جلب العناصر الأساسية
-        const welcomePopup = document.getElementById('welcome-popup'); //
+        const welcomePopup = document.getElementById('welcome-popup');
         const tipsPopup = document.getElementById('tips-popup');
         const instructionsPopup = document.getElementById('instructions-popup');
         const setupScreen = document.getElementById('setup-screen');
@@ -898,9 +1014,9 @@
         }
 
         // تسلسل ظهور النوافذ عند بدء التشغيل
-        function showTipsPopupFromWelcome() { //
-            hidePopup(welcomePopup); //
-            showPopup(tipsPopup); //
+        function showTipsPopupFromWelcome() {
+            hidePopup(welcomePopup);
+            showPopup(tipsPopup);
         }
 
         function showInstructionsPopup() {
@@ -952,7 +1068,6 @@
                     team.name = input.value.trim();
                 }
             });
-            // لا حاجة لإعادة رسم حقول الإدخال هنا، فالقيم محدثة بالفعل في الـ DOM
             alert('تم حفظ أسماء الفرق!');
         }
 
@@ -970,16 +1085,16 @@
         function renderScoreBoard() {
             teamScoreBoard.innerHTML = '';
             // تحديد تخطيط الشبكة بناءً على عدد الفرق
-            if (teams.length === 2) { // 2 لاعبين (1x2 أو 2x1)
+            if (teams.length === 2) {
                 teamScoreBoard.classList.remove('grid-2x2', 'grid-2-columns');
-                teamScoreBoard.style.display = 'flex'; // استخدام flexbox لعرض صف واحد أو عمود واحد بشكل أفضل
+                teamScoreBoard.style.display = 'flex';
                 teamScoreBoard.style.flexDirection = 'row';
-                teamScoreBoard.style.flexWrap = 'wrap'; // لضمان الالتفاف على الشاشات الصغيرة
-            } else if (teams.length === 4) { // 4 لاعبين (2x2)
+                teamScoreBoard.style.flexWrap = 'wrap';
+            } else if (teams.length === 4) {
                 teamScoreBoard.classList.add('grid-2x2');
                 teamScoreBoard.classList.remove('grid-2-columns');
                 teamScoreBoard.style.display = 'grid';
-            } else if (teams.length === 6) { // 6 لاعبين (3x2)
+            } else if (teams.length === 6) {
                 teamScoreBoard.classList.add('grid-2-columns');
                 teamScoreBoard.classList.remove('grid-2x2');
                 teamScoreBoard.style.display = 'grid';
@@ -987,7 +1102,7 @@
 
             teams.forEach((team, index) => {
                 const card = document.createElement('div');
-                card.className = `team-score-card team-${index}-card`; // إضافة فئة لون خاصة بالفريق
+                card.className = `team-score-card team-${index}-card`;
                 
                 const name = document.createElement('h3');
                 name.textContent = team.name;
@@ -1004,7 +1119,7 @@
                 addScoreBtn.textContent = '+1 نقطة';
                 addScoreBtn.onclick = () => {
                     team.score++;
-                    renderScoreBoard(); // تحديث لوحة النقاط فوراً
+                    renderScoreBoard();
                 };
                 card.appendChild(addScoreBtn);
 
@@ -1014,42 +1129,64 @@
 
         // تحديث نص زر "بدء الجولة"
         function updateNextRoundButtonText() {
-            if (currentRound < 4) { // هناك 4 جولات
+            // Determine the maximum number of questions in any category
+            const maxQuestionsPerCategory = Math.max(...Object.values(groupedQuestions).map(arr => arr.length));
+            
+            if (currentRound < maxQuestionsPerCategory) {
                 nextRoundBtn.textContent = `بدء الجولة ${currentRound + 1}`;
             } else {
-                nextRoundBtn.textContent = 'الجولة الحاسمة'; // إذا تجاوزنا 4 جولات (للكسر التعادل)
+                nextRoundBtn.textContent = 'الجولة الحاسمة'; // For tie-breakers after all main questions are used
             }
         }
 
         // بدء تسلسل السؤال (عداد ما قبل السؤال، عرض السؤال، عرض الإجابة)
         function startQuestionSequence() {
-            if (currentRound >= 4 && !isTie()) { // إذا انتهت 4 جولات ولا يوجد تعادل
-                endGame();
-                return;
-            }
+            // Determine the maximum number of questions in any category
+            const maxQuestionsPerCategory = Math.max(...Object.values(groupedQuestions).map(arr => arr.length));
 
-            // إذا كانت الجولة الحاسمة (بعد الجولة 4)، اختر فئة عشوائية
-            if (currentRound >= 4 && isTie()) {
+            // If it's a tie-breaker round (after all normal rounds)
+            if (currentRound >= maxQuestionsPerCategory && isTie()) {
                 questionInstruction.textContent = 'الجولة الحاسمة: اختر الفائز واضف النقطة للفريق الفائز';
                 questionInstruction.style.color = 'var(--primary-light-color)';
-                const randomCategoryIndex = Math.floor(Math.random() * 4); // اختر فئة عشوائية (0-3)
-                startNewQuestion(Object.keys(groupedQuestions)[randomCategoryIndex]); // ابدأ بسؤال من فئة عشوائية
-                nextRoundBtn.style.display = 'none'; // أخفِ زر بدء الجولة
-                endGameBtn.style.display = 'none'; // أخفِ زر إنهاء اللعب مؤقتاً
+                const categories = Object.keys(groupedQuestions);
+                const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+                
+                // For tie-breaker, pick a question from the chosen random category. 
+                // We'll just pick one, ensuring it loops back if necessary.
+                const questionForTieBreakerIndex = (currentRound - maxQuestionsPerCategory) % groupedQuestions[randomCategory].length;
+                availableQuestions = [groupedQuestions[randomCategory][questionForTieBreakerIndex]];
+
+                currentQuestionIndex = 0; // Reset index for the new single question
+                showScreen(questionScreen);
+                resetQuestionDisplay();
+                startPreQuestionTimer(); // Start the pre-question timer for the tie-breaker
+                nextRoundBtn.style.display = 'none'; // Hide next round button during tie-breaker
+                endGameBtn.style.display = 'none'; // Hide end game button during tie-breaker
                 return;
             }
 
-            // الجولات العادية (1-4)
+            // Normal rounds (1 to maxQuestionsPerCategory)
             currentRound++;
             updateNextRoundButtonText();
             questionInstruction.textContent = `الجولة ${currentRound}: استعداد...`;
-            questionInstruction.style.color = 'var(--primary-light-color)'; // إعادة اللون إذا تغير في الجولة الحاسمة
+            questionInstruction.style.color = 'var(--primary-light-color)';
             showScreen(questionScreen);
             resetQuestionDisplay();
 
-            // إعداد الأسئلة للجولة الحالية
-            availableQuestions = shuffleArray(questions).slice(0, 4); // خلط واختيار 4 أسئلة لكل جولة
-            currentQuestionIndex = 0; // ابدأ دائماً من السؤال الأول في الجولة الجديدة
+            availableQuestions = []; // Clear previous questions for the new round
+            const categories = Object.keys(groupedQuestions); // Get all category names: "شخصيات مهمة", "طبخات", "حيوانات", "بلدان"
+
+            categories.forEach(category => {
+                const categoryQuestions = groupedQuestions[category];
+                // Calculate the index for the current round's question
+                // Use modulo operator to loop back to the beginning of the questions array for that category
+                const questionIndex = (currentRound - 1) % categoryQuestions.length;
+                availableQuestions.push(categoryQuestions[questionIndex]);
+            });
+
+            // Shuffle the 4 selected questions for variety in their display order within the round
+            availableQuestions = shuffleArray(availableQuestions); 
+            currentQuestionIndex = 0; // Always start from the first question of the new set
             startPreQuestionTimer();
         }
 
@@ -1141,22 +1278,28 @@
         // الانتقال إلى السؤال التالي أو الجولة التالية
         function moveToNextQuestionOrRound() {
             currentQuestionIndex++;
+            const maxQuestionsPerCategory = Math.max(...Object.values(groupedQuestions).map(arr => arr.length));
+
             if (currentQuestionIndex < availableQuestions.length) {
-                // لا يزال هناك أسئلة في الجولة الحالية
+                // Still questions in the current round
                 resetQuestionDisplay();
                 startPreQuestionTimer();
             } else {
-                // انتهت أسئلة الجولة، العودة لشاشة النقاط
+                // End of questions for the current round
                 showScreen(scoreScreen);
-                renderScoreBoard(); // للتأكد من تحديث النقاط المعروضة
-                // إذا كانت هذه هي الجولة الحاسمة وانتهت، يجب إنهاء اللعب
-                if (currentRound > 4 && !isTie()) {
-                    endGame(); // إنهاء اللعب إذا لم يكن هناك تعادل بعد الجولة الحاسمة
-                } else if (currentRound === 4) { // إذا انتهت الجولة 4
+                renderScoreBoard(); // Ensure scores are updated on the screen
+
+                if (currentRound < maxQuestionsPerCategory) { // If it's normal rounds before max questions
+                    updateNextRoundButtonText();
+                    nextRoundBtn.style.display = 'block';
+                    endGameBtn.style.display = 'block';
+                } else { // It's reached or passed the max questions, check for tie or end game
                     if (isTie()) {
-                        nextRoundBtn.textContent = 'بدء الجولة الحاسمة';
+                        nextRoundBtn.textContent = 'بدء الجولة الحاسمة'; // For subsequent tie-breakers
+                        nextRoundBtn.style.display = 'block';
+                        endGameBtn.style.display = 'block';
                     } else {
-                        endGame(); // إذا لم يكن هناك تعادل بعد الجولة 4، انهي اللعب
+                        endGame(); // No tie, end the game
                     }
                 }
             }
@@ -1164,11 +1307,11 @@
 
         // التحقق من التعادل
         function isTie() {
-            if (teams.length <= 1) return false; // لا تعادل إذا كان فريق واحد أو لا شيء
+            if (teams.length <= 1) return false;
 
             const maxScore = Math.max(...teams.map(t => t.score));
             const teamsWithMaxScore = teams.filter(t => t.score === maxScore);
-            return teamsWithMaxScore.length > 1; // تعادل إذا كان أكثر من فريق واحد لديهم نفس أعلى نقطة
+            return teamsWithMaxScore.length > 1;
         }
 
         // إنهاء اللعب وعرض النتائج
@@ -1237,15 +1380,6 @@
             return array;
         }
 
-        // تجميع الأسئلة حسب الفئة (لم تعد مستخدمة بنفس الشكل بعد التعديل لـ availableQuestions)
-        const groupedQuestions = questions.reduce((acc, q) => {
-            if (!acc[q.category]) {
-                acc[q.category] = [];
-            }
-            acc[q.category].push(q);
-            return acc;
-        }, {});
-
         // عند تحميل الصفحة، أظهر النافذة الترحيبية
         document.addEventListener('DOMContentLoaded', (event) => {
             showPopup(welcomePopup); // بدء اللعبة بعرض نافذة الترحيب
@@ -1261,4 +1395,3 @@
     </script>
 </body>
 </html>
-
